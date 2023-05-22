@@ -1,0 +1,59 @@
+# Default Spring Profile
+server:
+  error:
+    include-message: always
+logging:
+  level:
+    root: INFO
+    com.com.comicstore: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+spring:
+  data:
+    mongodb:
+      username: user
+      password: pwd
+      host: localhost
+      port: 0
+      database: tournaments-db
+      authentication-database: admin
+      auto-index-creation: true
+
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 5.0.5
+
+app:
+  clients-service:
+    host: localhost
+    port: 7001
+  cardgame-service:
+    host: localhost
+    port: 7002
+  store-service:
+    host: localhost
+    port: 7003
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: docker
+spring.data.mongodb.host: mongodb
+spring.data.mongodb.port: 27017
+server.port: 8080
+
+
+app:
+  clients-service:
+    host: clients-service
+    port: 8080
+  cardgame-service:
+    host: cardgame-service
+    port: 8080
+  store-service:
+    host: store-service
+    port: 8080

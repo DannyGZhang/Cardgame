@@ -1,0 +1,16 @@
+@startuml
+
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+Person(employee,"Employee","An employee that works at the comic book store.")
+System(system, "ComicStore", "Allows the employee to view tournament results and access what is/was in inventory in the comic book store chain. The employee can also update and create clients, inventories and tournaments")
+
+
+
+Rel(employee, system, "Enter, view and update clients, tournaments and inventories.")
+
+
+@endumlRel(employee, system, "Enter, view and update clients, tournaments and inventories.")
+
+
+@enduml

@@ -1,0 +1,6 @@
+include 'api-gateway'
+include 'clients-service'
+include 'Store-service'
+include 'Tournament-service'
+include 'cardgame-service'
+include 'Inventory-service'

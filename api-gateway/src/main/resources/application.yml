@@ -1,0 +1,47 @@
+# Default Spring Profile
+server:
+  error:
+    include-message: always
+
+logging:
+  level:
+    root: INFO
+    com.comicstore: DEBUG
+
+app:
+  clients-service:
+    host: localhost
+    port: 7001
+  cardgame-service:
+    host: localhost
+    port: 7002
+  store-service:
+    host: localhost
+    port: 7003
+  tournament-service:
+    host: localhost
+    port: 7004
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+server:
+  port: 8080
+
+app:
+  clients-service:
+    host: clients-service
+    port: 8080
+  cardgame-service:
+    host: cardgame-service
+    port: 8080
+  store-service:
+    host: store-service
+    port: 8080
+  tournament-service:
+    host: tournament-service
+    port: 8080

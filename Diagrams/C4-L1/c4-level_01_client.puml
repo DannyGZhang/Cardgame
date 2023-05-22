@@ -1,0 +1,11 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+Person(client, "Client", "A client that has an account at the comic book store.")
+System(system, "ComicStore", "Allows the client to view tournament results and access what is/was in inventory in the comic book store chain.")
+
+
+
+Rel(client, system, "View tournament results, view inventory.")
+
+
+@enduml

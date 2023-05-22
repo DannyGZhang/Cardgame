@@ -1,0 +1,74 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!include DEVICONS/java.puml
+!include DEVICONS/mysql.puml
+!include DEVICONS/react.puml
+
+AddElementTag("microService", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white", $legendText="Micro Service\neight sided")
+AddElementTag("storage", $shape=RoundedBoxShape(), $bgColor="lightSkyBlue", $fontColor="white", $legendText="Databases")
+AddElementTag("webSite", $shape=RoundedBoxShape(), $bgColor="royalblue", $fontColor="white", $legendText="Single-Page Application")
+AddElementTag("webApp", $shape=RoundedBoxShape(), $bgColor="springgreen", $fontColor="black", $legendText="Web Application")
+AddRelTag("apigateway_rel", $lineColor="crimson",$legendText="API-Gateway relationships")
+AddRelTag("database_rel", $lineColor="dodgerblue",$legendText="Database Relationships")
+AddRelTag("ms_rel", $lineColor="darkgreen",$legendText="Microservice Relationships")
+
+SHOW_PERSON_OUTLINE()
+
+Person(employee,"Employee","An employee that works at the comic book store.")
+
+
+
+
+System_Boundary(comicStore_boundary, "Comic Store System") {
+Container(application, "Wep Application", "Spring boot: Java", "Delivers the data requested (client, inventory or tournament) in a single page application.", $sprite="java", $tags="webApp")
+Container(webPage, "Single-Page Application", "REACT JS", "Provides a GUI interface that contains all the functionalities of the Spring boot application.", $sprite="react",$tags="webSite")
+
+Container(api_gateway, "API Gateway", "Spring boot: Java", "Provides Internet functionality via a JSON/HTTPS. Handles incoming HTTPS requests and directs them to the appropriate microservice as JSON/HTTPS.", $sprite="java",$tags="microService")
+
+Container(tournament_s, "Tournament-Service","Spring boot: Java","Provides tournament functionalities such as getting all or one tournament, and for the employee creating and updating tournaments. It also allows access to the results and players(clients) in the tournament.",$sprite="java",$tags="microService")
+ContainerDb(tournament_db, "Tournament-DB","MySQL","Stores players(clients), results of matches and which card game was played.",$sprite="mysql",$tags="storage")
+
+Container(clients_s, "Clients-Service","Spring boot: Java","Provides functionalities such as getting all or one client. For the employee, you can create and update a client",$sprite="java",$tags="microService")
+ContainerDb(clients_db, "Clients-DB","MySQL","Stores clients information such as name, contact information and their identifier.",$sprite="mysql",$tags="storage")
+
+Container(cardgames_s, "CardGame-Service","Spring boot: Java","Provides functionalities such as getting all or one card game and/or it's sets. For the employee, you can create and update a card game.",$sprite="java",$tags="microService")
+ContainerDb(cardGame_db, "CardGames-DB","MySQL","Stores card games information such as name and sets.",$sprite="mysql",$tags="storage")
+
+Container(store_s, "Store-Service","Spring boot: Java","Provides functionalities such as getting all stores or getting specific stores by id. It also allows access to inventories. For employee's, it is possible to create and update stores and inventories",$sprite="java",$tags="microService")
+ContainerDb(store_db, "Store-DB","MySQL","Stores store information such as address and also stores all inventories shared by the stores.",$sprite="mysql",$tags="storage")
+
+
+}
+
+
+Rel(employee, application, "Visits shop.menardcomics.com using", "HTTPS")
+Rel(employee, webPage,"Views inventory and tournaments")
+
+
+Rel_R(application, webPage,"Delivers to the clients web page")
+
+Rel(webPage,api_gateway,"Make API calls to","JSON/HTTPS")
+
+
+Rel_D(api_gateway,tournament_s,"Sends request to","JSON/HTTPS",$tags="apigateway_rel")
+Rel_D(api_gateway,clients_s,"Sends request to","JSON/HTTPS",$tags="apigateway_rel")
+Rel_D(api_gateway,cardgames_s,"Sends request to","JSON/HTTPS",$tags="apigateway_rel")
+Rel_D(api_gateway,store_s,"Sends request to","JSON/HTTPS",$tags="apigateway_rel")
+
+Rel(clients_s, clients_db,"Reads from and Writes to","JDBC", $tags="database_rel")
+
+Rel(cardgames_s,cardGame_db,"Reads from and Writes to","JDBC", $tags="database_rel")
+
+
+
+Rel(tournament_s,clients_s,"Sends request to and receive response from","JSON/HTTPS", $tags="ms_rel")
+Rel(tournament_s,cardgames_s,"Sends request to and receive response from","JSON/HTTPS", $tags="ms_rel")
+Rel_L(tournament_s,tournament_db,"Reads from and Writes to","JDBC", $tags="database_rel")
+Rel(tournament_s, store_s,"Sends request to and receive response from","JSON/HTTPS", $tags="ms_rel")
+
+Rel(store_s, store_db,"Reads from and Writes to","JDBC", $tags="database_rel")
+
+SHOW_LEGEND()
+
+@enduml
